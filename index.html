@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Reactive Extensions Click Stream</title>
+  <link rel="stylesheet" href="site.css">
+</head>
+
+<body>
+  <ul id="line">
+
+  </ul>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.all.js"></script>
+  <script>
+    Rx.config.useNativeEvents = true;
+    //1 second = 15px;
+    var oneSecond = 15;
+    var clickLimit = 5;
+    var clickCount = 0;
+    var startDate = Date.now();
+    var timeLine = document.getElementById("line");
+
+    function growBox() {
+      var diff = Date.now() - startDate;
+      var seconds = diff / 1000;
+      timeLine.style.height = (seconds * oneSecond) + "px";
+      if (seconds < 20)
+        window.requestAnimationFrame(growBox);
+    };
+    window.requestAnimationFrame(growBox);
+    var clickStream = Rx.Observable.fromEvent(document, "click");
+    clickStream.map(function () {
+        clickCount++;
+        var mod = clickLimit - 1;
+        return "circle-" + (clickCount % mod + 1);
+      })
+      .bufferWithTime(1000)
+      .filter(function (clicks) {
+        return clicks.length < clickLimit && clicks.length;
+      })
+      .forEach(function (clicks) {
+        console.log(clicks.length);
+        var li = document.createElement("li");
+        li.classList.add("circles");
+
+        clicks.forEach(function (click) {
+          var span = document.createElement("span");
+          span.classList.add("circle");
+          span.classList.add(click);
+          li.appendChild(span);
+        });
+        var diff = Date.now() - startDate;
+        var seconds = diff / 1000;
+        li.style.top = (seconds * oneSecond - oneSecond / 2) + "px";
+        timeLine.appendChild(li);
+      })
+  </script>
+</body>
+
+</html>
