@@ -4,7 +4,19 @@ body {
   padding: 0;
   height: 100%;
   background-color: #fcfcfc;
-  user-select:none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+  color:#343435;
+}
+
+h1 {
+  font-family: 'Droid Sans', sans-serif;
+  font-weight: normal;
+  text-align: center;
+  margin:0;
+  padding:0.67em 0;
 }
 
 ul {
@@ -18,15 +30,21 @@ li {
 
 #line {
   margin-left: 100px;
-  border-left: 2px solid #888;
-  width: 0;
+  border-left: 3px solid #aaa;
+  width: 3px;
+  background-color: #888;
+  position: relative;
+  margin: 0 auto;
+}
+
+#container{
   position: relative;
 }
 
 #line > li {
   position: absolute;
   list-style: none;
-  left: -101px;
+  left: -100px;
 }
 
 .circles {
@@ -36,27 +54,30 @@ li {
 
 .circle {
   display: inline-block;
-  height: 15px;
-  width: 15px;
+  height: 25px;
+  width: 25px;
   border-radius: 100%;
+  border-width: 4px;
+  border-style: solid;
+  box-sizing: border-box;
 }
 
 .circle-1 {
   background-color: #00A0B0;
-  border: 1px solid #00A0B0;
+  border-color: #128E9A;
 }
 
 .circle-2 {
   background-color: #CC333F;
-  border: 1px solid #CC333F;
+  border-color: #B31925;
 }
 
 .circle-3 {
   background-color: #6A4A3C;
-  border: 1px solid #6A4A3C;
+  border-color: #503C33;
 }
 
 .circle-4 {
   background-color: #EDC951;
-  border: 1px solid #EDC951;
+  border-color: #D4AC27;
 }
