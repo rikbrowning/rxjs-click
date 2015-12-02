@@ -4,39 +4,48 @@
 <head>
   <title>Reactive Extensions Click Stream</title>
   <link rel="stylesheet" href="site.css">
+  <link href='https://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-  <ul id="line">
+  <div id="container">
+    <h1>Click events grouped per second</h1>
+    <ul id="line">
 
-  </ul>
+    </ul>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.all.js"></script>
   <script>
     Rx.config.useNativeEvents = true;
-    //1 second = 15px;
-    var oneSecond = 15;
-    var clickLimit = 5;
+    //1 second = 30px;
+    var oneSecond = 30;
+    var colorCount = 4;
     var clickCount = 0;
     var startDate = Date.now();
     var timeLine = document.getElementById("line");
-
+    var viewportHeight = window.innerHeight;
+    var container = document.getElementById("container");
+    var titleHeight = document.querySelector("h1").clientHeight;
     function growBox() {
       var diff = Date.now() - startDate;
       var seconds = diff / 1000;
-      timeLine.style.height = (seconds * oneSecond) + "px";
-      if (seconds < 20)
+      var newHeight = (seconds * oneSecond);
+      timeLine.style.height = newHeight + "px";
+      if (newHeight > viewportHeight - titleHeight) {
+        container.style.top = -(newHeight - viewportHeight + titleHeight  ) + "px";
+      }
+      if (seconds < 180)
         window.requestAnimationFrame(growBox);
     };
     window.requestAnimationFrame(growBox);
     var clickStream = Rx.Observable.fromEvent(document, "click");
     clickStream.map(function () {
         clickCount++;
-        var mod = clickLimit - 1;
-        return "circle-" + (clickCount % mod + 1);
+        return "circle-" + (clickCount % colorCount + 1);
       })
       .bufferWithTime(1000)
       .filter(function (clicks) {
-        return clicks.length < clickLimit && clicks.length;
+        return clicks.length;
       })
       .forEach(function (clicks) {
         console.log(clicks.length);
